@@ -6,7 +6,7 @@
       <div *ngFor='let goal of goals;let i = index'>
         <li appStrikethrough>
           {{goal.id}}
-          {{goal.name}}
+          {{goal.name}} due on {{goal.completeDate| date| uppercase}}
           
         </li>
         <button (click)='toggleDetails(i)'>Toggle Details</button>
