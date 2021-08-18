@@ -3,8 +3,11 @@
     <h1>My Goals</h1>
     <hr>
     <ul>
-      <li *ngFor='let goal of goals'>
-        {{goal.name}}
-      </li>
+      <div *ngFor='let goal of goals;let i = index'>
+        <li>{{goal.name}}</li>
+        <button (click)='toggleDetails(i)'>Toggle Details</button>
+        <app-goal-detail *ngIf='goal.showDescription' [goal]='goal' (isComplete) = 'completeGoal($event, i)'></app-goal-detail>
+      </div>
     </ul>
+    <p *ngIf='goals.length > 5'>You have too many goals</p>
   </div>
