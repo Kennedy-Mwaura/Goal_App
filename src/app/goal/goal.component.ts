@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Goal } from '../goal';
 import { GoalService } from '../goal-service/goal.service';
 import { AlertService } from '../alert-service/alert.service';
+import { HttpClient } from '@angular/common/http';
+import { Quote } from '../quote-class/quote';
 
 @Component({
   selector: 'app-goal',
@@ -11,6 +13,7 @@ import { AlertService } from '../alert-service/alert.service';
 export class GoalComponent implements OnInit {
   goals: Goal[];
   alertService: AlertService;
+  quote!: Quote;
 
   addNewGoal(goal:any ){
     let goalLength = this.goals.length;
@@ -37,12 +40,24 @@ export class GoalComponent implements OnInit {
     }
   }
 
-  constructor(goalService:GoalService, alertService: AlertService) {
+  constructor(goalService:GoalService, alertService: AlertService, private http: HttpClient) {
     this.goals = goalService.getGoals();
     this.alertService  = alertService;
    }
   
-  ngOnInit(): void {
+  ngOnInit() {
+    interface ApiResponse {
+      author: string;
+      quote: string;
+    }
+    this.http.get<ApiResponse>("http://quotes.stormconsultancy.co.uk/random.json").subscribe(data => {
+      // successful Api request
+      this.quote = new Quote(data.author, data.quote)
+    }, err => {
+      this.quote = new Quote("Winston Churchill","Never give up")
+      console.log("Error:" + err.message, err)
+    })
   }
+
 
 }
